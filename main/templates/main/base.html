@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %} {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+            <h1>Blog</h1>
+            <div>
+              {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                  <a 
+                    href="{% url 'admin:index' %}" 
+                    >
+                      Адмін панель
+                  </a>
+                {% endif %}
+                <a href="{% url 'accounts:profile' %}">Профіль</a>
+                <a href="{% url 'accounts:logout' %}">Вийти</a>
+              {% else %}
+                <a href="{% url 'accounts:login' %}">Вхід</a>
+                <a href="{% url 'accounts:register' %}">Реєстрація</a>
+              {% endif %}
+            </div>
+          </div>
+        <nav>
+          <ul>
+            <li><a href="{% url 'main:product_list' %}" class="sort-btn">Всі продукти</a></li>
+              {% for category in categories %}
+               <li><a href="{{ category.get_absolute_url }}" class="sort-btn">{{ category.name }}</a></li>
+              {% endfor %}
+          </ul>
+        </nav>
+      </header>
+      <main class="main">{% block content %} {% endblock %}</main>
+    </div>
+  </body>
+</html>

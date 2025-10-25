@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+ 
+{% block title %}{{ product.title }}{% endblock %}
+ 
+{% block content %}
+<article class="product-detail">
+  <div class="product-detail-header">
+    <h1 class="product-detail-title">{{ product.name }}</h1>
+    <div class="product-detail-meta">
+      <span class="meta-item">👤 {{ product.category }}</span>
+      <span class="meta-item">📅 {{ product.created_at|date:"d.m.Y H:i" }}</span>
+      <span class="meta-item">👁️ {{ product.views }} переглядів</span>
+      <span class="meta-item">📂 <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></span>
+    </div>
+  </div>
+ 
+  {% if product.image %}
+  <div class="product-detail-image">
+    <img src="{{ product.image.url }}" alt="{{ product.title }}">
+  </div>
+  {% endif %}
+ 
+  <div class="product-detail-content">
+    {{ product.description|linebreaks }}
+  </div>
+ 
+  <div class="product-detail-footer">
+    <p class="product-updated">Оновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
+    <a href="{% url 'main:product_list' %}" class="back-btn">← Повернутися до списку</a>
+    <form style="display:inline;">
+      <button class="add-cart-btn">Додати в кошик</button>
+    </form>
+  </div>
+</article>
+ 
+{% if product %}
+<section class="related-products">
+  <h2 class="related-title">Схожі продукти</h2>
+  <div class="related-grid">
+    {% for related in related_products %}
+    <div class="related-card">
+      {% if related.image %}
+      <img src="{{ related.image.url }}" alt="{{ related.name }}">
+      {% endif %}
+      <h3>{{ related.name }}</h3>
+      <p>{{ related.description|truncatewords:15 }}</p>
+      <a href="{{ related.get_absolute_url }}">Читати далі →</a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

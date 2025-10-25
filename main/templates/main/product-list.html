@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+ 
+{% block title %}Products{% endblock %}
+ 
+{% block content %}
+ 
+    <h1 class="products-title">Products</h1>
+    <div class="sort-buttons">
+        <a href="?sort=new" class="sort-btn {% if current_sort == 'new' %}active{% endif %}">Спочатку нові</a>
+        <a href="?sort=old" class="sort-btn {% if current_sort == 'old' %}active{% endif %}">Спочатку старі</a>
+        <a href="?sort=popular" class="sort-btn {% if current_sort == 'popular' %}active{% endif %}">Спочатку популярні</a>
+        <a href="?sort=price_low" class="sort-btn {% if current_sort == 'price_low' %}active{% endif %}">За ціною(спочатку дешеві)</a>
+        <a href="?sort=price_high" class="sort-btn {% if current_sort == 'price_high' %}active{% endif %}">За ціною(спочатку дорогі)</a>
+        <a href="?sort=name" class="sort-btn {% if current_sort == 'name' %}active{% endif %}">За назвою</a>
+    </div>
+
+    <div class="products-grid">
+        {% for product in products %}
+            <div class="product-card">
+                {% if product.featured %}
+                    <span class="featured-badge">Рекомендовано</span>
+                {% endif %}
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                {% endif %}
+                <h2 class="product-title">{{ product.name }}</h2>
+                <p>{{ product.description|truncatewords:15 }}</p>
+                <p>Ціна: {{ product.price }}</p>
+                <p>
+                    {% if product.is_available %}
+                        Є в наявності
+                    {% else %}
+                        Немає
+                    {% endif %}
+                </p>
+                <div class="product-meta">
+                    <span class="meta-item">📂 {{ product.category.name }}</span>
+                    <span class="meta-item">👁️ {{ product.views }}</span>
+                </div>
+                <a href="{{ product.get_absolute_url }}">Детальніше →</a>
+            </div>
+        {% empty %}
+        <p class="no-products">Продукти не знайдено.</p>
+        {% endfor %}
+    </div>
+ 
+{% endblock %}
