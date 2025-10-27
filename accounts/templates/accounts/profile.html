@@ -3,38 +3,34 @@
 {% block title %}Профіль - {{ user.username }}{% endblock %} 
 
 {% block content %}
-<div>
-  <div>
-    <div>
-      <h1>Профіль користувача</h1>
+<div class="profile-container">
+  <h1>Профіль користувача</h1>
+
+  <div class="profile-info">
+    <div class="profile-item">
+      <strong>Ім'я користувача:</strong>
+      <span>{{ user.username }}</span>
     </div>
 
-    <div>
-      <div>
-        <strong>Ім'я користувача:</strong>
-        <span>{{ user.username }}</span>
-      </div>
-
-      <div>
-        <strong>Email:</strong>
-        <span>{{ user.email|default:"Не вказано" }}</span>
-      </div>
-
-      <div>
-        <strong>Дата реєстрації:</strong>
-        <span>{{ user.date_joined|date:"d.m.Y H:i" }}</span>
-      </div>
-
-      <div>
-        <strong>Останній вхід:</strong>
-        <span>{{ user.last_login|date:"d.m.Y H:i" }}</span>
-      </div>
+    <div class="profile-item">
+      <strong>Email:</strong>
+      <span>{{ user.email|default:"Не вказано" }}</span>
     </div>
 
-    <div>
-      <a href="{% url 'main:product_list' %}">Повернутися до постів</a>
-      <a href="{% url 'accounts:logout' %}">Вийти</a>
+    <div class="profile-item">
+      <strong>Дата реєстрації:</strong>
+      <span>{{ user.date_joined|date:"d.m.Y H:i" }}</span>
     </div>
+
+    <div class="profile-item">
+      <strong>Останній вхід:</strong>
+      <span>{{ user.last_login|date:"d.m.Y H:i" }}</span>
+    </div>
+  </div>
+
+  <div class="profile-actions">
+    <a href="{% url 'main:product_list' %}" class="btn-secondary">← Повернутися до постів</a>
+    <a href="{% url 'accounts:logout' %}" class="btn-danger">Вийти</a>
   </div>
 </div>
 {% endblock %}
