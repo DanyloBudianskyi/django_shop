@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Category
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 
 def product_list(request, category_slug=None):
     categories = Category.objects.all()
@@ -11,6 +13,12 @@ def product_list(request, category_slug=None):
         category = get_object_or_404(Category, slug = category_slug)
         products = products.filter(category=category)
     
+    search_query = request.GET.get('q')
+    if search_query:
+        products = products.filter(
+            Q(name__icontains = search_query)
+        )
+
     sort = request.GET.get('sort')
     if sort == 'new':
         products = products.order_by('-created_at')
@@ -24,7 +32,17 @@ def product_list(request, category_slug=None):
         products = products.order_by('-price')
     elif sort == 'name':
         products = products.order_by('name')
-    return render(request, 'main/product-list.html', {'products': products, 'categories': categories, 'category': category, 'current_sort': sort})
+
+    paginator = Paginator(products, 6)
+    page = request.GET.get('page')
+    try:
+        products = paginator.page(page)
+    except PageNotAnInteger:
+        products = paginator.page(1)
+    except EmptyPage:
+        products = paginator.page(paginator.num_pages)    
+
+    return render(request, 'main/product-list.html', {'products': products, 'categories': categories, 'category': category, 'current_sort': sort, 'search_query': search_query})
 
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id = id, slug = slug)

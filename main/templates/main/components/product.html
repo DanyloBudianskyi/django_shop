@@ -1,0 +1,23 @@
+<div class="product-card">
+    {% if product.featured %}
+        <span class="featured-badge">Рекомендовано</span>
+    {% endif %}
+    {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.title }}">
+    {% endif %}
+    <h2 class="product-title">{{ product.name }}</h2>
+    <p>{{ product.description|truncatewords:15 }}</p>
+    <p>Ціна: {{ product.price }}</p>
+    <p>
+        {% if product.is_available %}
+            Є в наявності
+        {% else %}
+            Немає
+        {% endif %}
+    </p>
+    <div class="product-meta">
+        <span class="meta-item">📂 {{ product.category.name }}</span>
+        <span class="meta-item">👁️ {{ product.views }}</span>
+    </div>
+    <a href="{{ product.get_absolute_url }}">Детальніше →</a>
+</div>
