@@ -1,26 +1,24 @@
 {% if products.has_other_pages %}
-<div>
-  <div>
+<div class="pagination-container">
+  <div class="pagination">
     {% if products.has_previous %}
-      <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+      <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn prev">
         &lsaquo;
       </a>
     {% endif %}
-   
+
     {% for num in products.paginator.page_range %}
       {% if products.number == num %}
-        <span>
-          {{ num }}
-        </span>
+        <span class="page-btn active">{{ num }}</span>
       {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-        <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+        <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn">
           {{ num }}
         </a>
       {% endif %}
     {% endfor %}
-   
+
     {% if products.has_next %}
-      <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+      <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn next">
         &rsaquo;
       </a>
     {% endif %}

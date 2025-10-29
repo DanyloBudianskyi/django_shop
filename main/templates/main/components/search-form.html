@@ -1,19 +1,26 @@
-<form method="get" action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'main:product_list' %}{% endif %}" class="mb-8">
-  <div>
+<form 
+  method="get" 
+  action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'main:product_list' %}{% endif %}" 
+  class="search-form"
+>
+  <div class="search-bar">
     <input
       type="text"
       name="q"
       value="{{ search_query|default:'' }}"
       placeholder="Пошук продуктів..."
+      class="search-input"
     >
     <button
       type="submit"
+      class="search-btn"
     >
       🔍
     </button>
     {% if search_query %}
     <a
       href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'main:product_list' %}{% endif %}"
+      class="reset-btn"
     >
       ✕ Скинути
     </a>
