@@ -35,43 +35,6 @@ ul {
     flex-wrap: wrap;
 }
 
-.header h1 {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
-}
-
-.header-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.header nav ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    justify-content: center;
-}
-
-.header .sort-btn {
-    background-color: #444;
-    color: #fff;
-    padding: 8px 14px;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 14px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.header .sort-btn.active {
-    background-color: #fff;
-    color: #222;
-    font-weight: bold;
-}
 
  
 .main {

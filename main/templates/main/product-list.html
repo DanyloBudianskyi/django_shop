@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
- 
+{% load shop_tags %}
+
 {% block title %} 
     {% if search_query %} 
         Пошук: {{ search_query }} 
@@ -29,6 +30,7 @@
         <a href="?sort=price_high{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'price_high' %}active{% endif %}">За ціною(спочатку дорогі)</a>
         <a href="?sort=name{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'name' %}active{% endif %}">За назвою</a>
     </div>
+    {% show_popular_products 4 %}
 
     <div class="products-grid">
         {% for product in products %}

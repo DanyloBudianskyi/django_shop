@@ -1,5 +1,6 @@
 {% load static %}
 {% load static tailwind_tags %}
+{% load shop_tags %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,34 +12,49 @@
   </head>
   <body>
     <div class="container">
-      <header class="header">
-        <div class="header-top">
-          <h1>Shop</h1>
+      <header class="bg-gray-900 text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row sm:justify-between sm:items-center">
+          <div class="flex items-center gap-3 mb-4 sm:mb-0">
+            <span class="text-3xl">🛍️</span>
+            <h1 class="text-2xl font-bold tracking-wide">Shop</h1>
+          </div>
 
-        <div class="header-buttons">
-          {% if user.is_authenticated %}
-            {% if user.is_staff %}
-              <a href="{% url 'admin:index' %}" class="btn-secondary">Адмін панель</a>
+          <div class="text-sm text-gray-300 mb-4 sm:mb-0">
+            {% user_greeting %}
+          </div>
+
+          <div class="flex gap-2 flex-wrap">
+            {% if user.is_authenticated %}
+              {% if user.is_staff %}
+                <a href="{% url 'admin:index' %}" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-medium">Адмін панель</a>
+              {% endif %}
+              <a href="{% url 'accounts:profile' %}" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-medium">Профіль</a>
+              <a href="{% url 'accounts:logout' %}" class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-medium">Вийти</a>
+            {% else %}
+              <a href="{% url 'accounts:login' %}" class="px-3 py-1 bg-gray-800 hover:bg-gray-700 text-white rounded text-sm font-medium">Вхід</a>
+              <a href="{% url 'accounts:register' %}" class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-black rounded text-sm font-medium">Реєстрація</a>
             {% endif %}
-            <a href="{% url 'accounts:profile' %}" class="btn-secondary">Профіль</a>
-            <a href="{% url 'accounts:logout' %}" class="btn-danger">Вийти</a>
-          {% else %}
-            <a href="{% url 'accounts:login' %}" class="btn-secondary">Вхід</a>
-            <a href="{% url 'accounts:register' %}" class="btn-submit">Реєстрація</a>
-          {% endif %}
+          </div>
         </div>
-      </div>
 
-      <nav>
-        <ul>
-          <li><a href="{% url 'main:product_list' %}" class="sort-btn">Всі продукти</a></li>
-          {% for category in categories %}
-            <li><a href="{{ category.get_absolute_url }}" class="sort-btn">{{ category.name }}</a></li>
-          {% endfor %}
-        </ul>
-      </nav>
-    </header>
-
+        <nav class="bg-gray-800 border-t border-gray-700 mt-4">
+          <div class="max-w-7xl mx-auto px-4 py-3">
+            <ul class="flex flex-wrap gap-3 text-sm">
+              <li>
+                <a href="{% url 'main:product_list' %}" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded font-medium">Всі продукти</a>
+              </li>
+              {% for category in categories %}
+                <li>
+                  <a href="{{ category.get_absolute_url }}" class="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-white rounded font-medium flex items-center gap-1">
+                    {{ category.name }}
+                    <span class="bg-teal-500 text-white px-2 py-0.5 rounded-full text-xs font-semibold">{% get_products_count category %}</span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </nav>
+      </header>
       <main class="main">{% block content %} {% endblock %}</main>
     </div>
   </body>

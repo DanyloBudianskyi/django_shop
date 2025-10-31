@@ -1,14 +1,15 @@
 {% extends 'main/base.html' %}
- 
 {% block title %}{{ product.title }}{% endblock %}
- 
+
+{% load shop_filters %}
+
 {% block content %}
 <article class="product-detail">
   <div class="product-detail-header">
     <h1 class="product-detail-title">{{ product.name }}</h1>
     <div class="product-detail-meta">
       <span class="meta-item">👤 {{ product.category }}</span>
-      <span class="meta-item">📅 {{ product.created_at|date:"d.m.Y H:i" }}</span>
+      <span class="meta-item">📅 {{ product.created_at| time_ago }}</span>
       <span class="meta-item">👁️ {{ product.views }} переглядів</span>
       <span class="meta-item">📂 <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></span>
     </div>
@@ -21,6 +22,7 @@
   {% endif %}
  
   <div class="product-detail-content">
+    <p class="text-lg text-black font-bold mt-2">💰Ціна: {{ product.price| currency }}</p>
     {{ product.description|linebreaks }}
   </div>
  

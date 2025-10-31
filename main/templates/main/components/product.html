@@ -1,3 +1,5 @@
+{% load shop_filters %}
+
 <div class="product-card">
     {% if product.featured %}
         <span class="featured-badge">Рекомендовано</span>
@@ -7,7 +9,7 @@
     {% endif %}
     <h2 class="product-title">{{ product.name }}</h2>
     <p>{{ product.description|truncatewords:15 }}</p>
-    <p>Ціна: {{ product.price }}</p>
+    <p>Ціна: {{ product.price| compact_number }}</p>
     <p>
         {% if product.is_available %}
             Є в наявності
@@ -21,3 +23,4 @@
     </div>
     <a href="{{ product.get_absolute_url }}">Детальніше →</a>
 </div>
+
