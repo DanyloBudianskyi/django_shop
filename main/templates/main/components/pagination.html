@@ -1,24 +1,27 @@
 {% if products.has_other_pages %}
-<div class="pagination-container">
-  <div class="pagination">
+<div class="flex justify-center mt-10">
+  <div class="flex items-center gap-2 bg-white px-4 py-3 rounded-lg shadow border border-gray-200">
     {% if products.has_previous %}
-      <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn prev">
+      <a href="?page={{ products.previous_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+      class="px-3 py-1 rounded-md text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
         &lsaquo;
       </a>
     {% endif %}
 
     {% for num in products.paginator.page_range %}
       {% if products.number == num %}
-        <span class="page-btn active">{{ num }}</span>
+        <span class="px-3 py-1 rounded-md bg-indigo-600 text-white font-medium shadow-sm">{{ num }}</span>
       {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-        <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn">
+        <a href="?page={{ num }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+        class="px-3 py-1 rounded-md text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition">
           {{ num }}
         </a>
       {% endif %}
     {% endfor %}
 
     {% if products.has_next %}
-      <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="page-btn next">
+      <a href="?page={{ products.next_page_number }}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" 
+      class="px-3 py-1 rounded-md text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 transition">
         &rsaquo;
       </a>
     {% endif %}

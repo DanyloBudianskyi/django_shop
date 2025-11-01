@@ -1,26 +1,26 @@
 <form 
   method="get" 
   action="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'main:product_list' %}{% endif %}" 
-  class="search-form"
+  class="w-full max-w-lg mx-auto mt-6"
 >
-  <div class="search-bar">
+  <div class="flex items-center gap-2 bg-white border border-gray-300 rounded-lg shadow-sm px-3 py-2">
     <input
       type="text"
       name="q"
       value="{{ search_query|default:'' }}"
       placeholder="Пошук продуктів..."
-      class="search-input"
+      class="flex-1 outline-none border-none bg-transparent text-gray-700 placeholder-gray-400 text-sm focus:ring-0"
     >
     <button
       type="submit"
-      class="search-btn"
+      class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md text-sm font-medium transition"
     >
       🔍
     </button>
     {% if search_query %}
     <a
       href="{% if category %}{{ category.get_absolute_url }}{% else %}{% url 'main:product_list' %}{% endif %}"
-      class="reset-btn"
+      class="px-2 py-1 text-gray-500 hover:text-indigo-600 text-sm transition"
     >
       ✕ Скинути
     </a>

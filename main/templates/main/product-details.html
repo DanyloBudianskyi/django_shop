@@ -4,49 +4,57 @@
 {% load shop_filters %}
 
 {% block content %}
-<article class="product-detail">
-  <div class="product-detail-header">
-    <h1 class="product-detail-title">{{ product.name }}</h1>
-    <div class="product-detail-meta">
+<article class="max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden p-6">
+
+  <div class="mb-6 text-center">
+    <h1 class="text-3xl font-bold text-indigo-600 mb-2">{{ product.name }}</h1>
+    <div class="flex flex-wrap justify-center gap-3 text-sm text-gray-500">
       <span class="meta-item">👤 {{ product.category }}</span>
-      <span class="meta-item">📅 {{ product.created_at| time_ago }}</span>
+      <span class="meta-item">📅 {{ product.created_at|time_ago }}</span>
       <span class="meta-item">👁️ {{ product.views }} переглядів</span>
-      <span class="meta-item">📂 <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></span>
+      <span class="meta-item">📂 
+        <a href="{{ product.category.get_absolute_url }}" class="text-indigo-600 hover:underline">{{ product.category.name }}</a>
+      </span>
     </div>
   </div>
- 
+
   {% if product.image %}
-  <div class="product-detail-image">
-    <img src="{{ product.image.url }}" alt="{{ product.title }}">
+  <div class="flex justify-center mb-6">
+    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="rounded-lg shadow-sm max-h-96 object-contain">
   </div>
   {% endif %}
- 
-  <div class="product-detail-content">
-    <p class="text-lg text-black font-bold mt-2">💰Ціна: {{ product.price| currency }}</p>
-    {{ product.description| markdown }}
+
+  <div class="mb-6">
+    <p class="text-xl font-semibold text-indigo-700 mb-4">💰 Ціна: {{ product.price|currency }}</p>
+    <div class="prose prose-indigo max-w-none">
+      {{ product.description|markdown }}
+    </div>
   </div>
- 
-  <div class="product-detail-footer">
-    <p class="product-updated">Оновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
-    <a href="{% url 'main:product_list' %}" class="back-btn">← Повернутися до списку</a>
-    <form style="display:inline;">
-      <button class="add-cart-btn">Додати в кошик</button>
-    </form>
+
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4 border-t border-gray-200 pt-4">
+    <p class="text-sm text-gray-500">Оновлено: {{ product.updated_at|date:"d.m.Y H:i" }}</p>
+    
+    <div class="flex gap-3 flex-wrap">
+      <a href="{% url 'main:product_list' %}" class="btn btn-outline btn-sm">← Повернутися до списку</a>
+      <form style="display:inline;">
+        <button class="btn btn-primary btn-sm">Додати в кошик</button>
+      </form>
+    </div>
   </div>
 </article>
- 
+
 {% if product %}
-<section class="related-products">
-  <h2 class="related-title">Схожі продукти</h2>
-  <div class="related-grid">
+<section class="max-w-7xl mx-auto mt-12">
+  <h2 class="text-2xl font-bold text-indigo-600 mb-6 text-center">Схожі продукти</h2>
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {% for related in related_products %}
-    <div class="related-card">
+    <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
       {% if related.image %}
-      <img src="{{ related.image.url }}" alt="{{ related.name }}">
+      <img src="{{ related.image.url }}" alt="{{ related.name }}" class="rounded-md mb-3 h-48 w-full object-cover">
       {% endif %}
-      <h3>{{ related.name }}</h3>
-      <p>{{ related.description|truncatewords:15 }}</p>
-      <a href="{{ related.get_absolute_url }}">Читати далі →</a>
+      <h3 class="text-lg font-semibold mb-1 text-gray-800">{{ related.name }}</h3>
+      <p class="text-sm text-gray-600 mb-3">{{ related.description|truncatewords:15 }}</p>
+      <a href="{{ related.get_absolute_url }}" class="text-indigo-600 hover:underline font-medium">Читати далі →</a>
     </div>
     {% endfor %}
   </div>

@@ -8,36 +8,46 @@
         {{ category.name }} 
     {% else %} 
         Каталог товарів
-        {% endif %}
-    {% endblock %}
- 
-{% block content %}
-    <h1 class="products-title">
-        {% if search_query %} 
-            Результати пошуку 
-        {% elif category %} 
-            {{ category.name }}
-        {% else %} 
-            Каталог товарів 
-        {% endif %}
-    </h1>
-    {% include 'main/components/search-form.html' %}
-    <div class="sort-buttons">
-        <a href="?sort=new{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'new' %}active{% endif %}">Спочатку нові</a>
-        <a href="?sort=old{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'old' %}active{% endif %}">Спочатку старі</a>
-        <a href="?sort=popular{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'popular' %}active{% endif %}">Спочатку популярні</a>
-        <a href="?sort=price_low{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'price_low' %}active{% endif %}">За ціною(спочатку дешеві)</a>
-        <a href="?sort=price_high{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'price_high' %}active{% endif %}">За ціною(спочатку дорогі)</a>
-        <a href="?sort=name{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="sort-btn {% if current_sort == 'name' %}active{% endif %}">За назвою</a>
-    </div>
-    {% show_popular_products 4 %}
+    {% endif %}
+{% endblock %}
 
-    <div class="products-grid">
-        {% for product in products %}
-            {% include 'main/components/product.html' %}
-        {% empty %}
-            {% include 'main/components/notfound.html' %}
-        {% endfor %}
-    </div>
-    {% include 'main/components/pagination.html' %}
+{% block content %}
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <h1 class="text-3xl font-bold text-indigo-600 mb-6 text-center">
+    {% if search_query %} 
+        Результати пошуку 
+    {% elif category %} 
+        {{ category.name }}
+    {% else %} 
+        Каталог товарів
+    {% endif %}
+  </h1>
+
+  {% include 'main/components/search-form.html' %}
+
+  <div class="flex flex-wrap justify-center gap-2 mb-6 mt-6">
+    <a href="?sort=new{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'new' %}btn-primary{% else %}btn-outline{% endif %}">Спочатку нові</a>
+    <a href="?sort=old{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'old' %}btn-primary{% else %}btn-outline{% endif %}">Спочатку старі</a>
+    <a href="?sort=popular{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'popular' %}btn-primary{% else %}btn-outline{% endif %}">Спочатку популярні</a>
+    <a href="?sort=price_low{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'price_low' %}btn-primary{% else %}btn-outline{% endif %}">За ціною(спочатку дешеві)</a>
+    <a href="?sort=price_high{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'price_high' %}btn-primary{% else %}btn-outline{% endif %}">За ціною(спочатку дорогі)</a>
+    <a href="?sort=name{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn btn-sm {% if current_sort == 'name' %}btn-primary{% else %}btn-outline{% endif %}">За назвою</a>
+  </div>
+
+  {% show_popular_products 4 %}
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+      {% for product in products %}
+          {% include 'main/components/product.html' %}
+      {% empty %}
+          {% include 'main/components/notfound.html' %}
+      {% endfor %}
+  </div>
+
+  <div class="mt-8">
+      {% include 'main/components/pagination.html' %}
+  </div>
+
+</main>
 {% endblock %}
