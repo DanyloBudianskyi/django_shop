@@ -33,7 +33,7 @@ def product_list(request, category_slug=None):
     elif sort == 'name':
         products = products.order_by('name')
 
-    paginator = Paginator(products, 6)
+    paginator = Paginator(products, 8)
     page = request.GET.get('page')
     try:
         products = paginator.page(page)

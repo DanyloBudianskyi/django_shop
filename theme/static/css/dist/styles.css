@@ -1496,6 +1496,9 @@
   .text-red-700 {
     color: var(--color-red-700);
   }
+  .text-success {
+    color: var(--color-success);
+  }
   .text-teal-600 {
     color: var(--color-teal-600);
   }

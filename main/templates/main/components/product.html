@@ -24,9 +24,16 @@
     {{ product.description|truncatewords:15 }}
   </p>
 
-  <p class="text-lg font-semibold text-indigo-600">
-    Ціна: {{ product.price|compact_number }} ₴
-  </p>
+
+  {% if discount > 0 %}
+    <span class="badge bg-danger">-{{ discount }}%</span>
+    <p><del>{{ product.price|currency }}</del></p>
+    <p class="h5 text-success">{{ final_price|currency }}</p>
+  {% else %}
+    <p class="text-lg font-semibold text-indigo-600">
+        Ціна: {{ product.price|compact_number }} ₴
+    </p>
+  {% endif %}
 
   <p class="text-sm font-medium {{ product.is_available|yesno:'text-green-600,text-red-500' }}">
     {% if product.is_available %}

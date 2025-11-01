@@ -39,7 +39,7 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
       {% for product in products %}
-          {% include 'main/components/product.html' %}
+          {% show_product_card product %}
       {% empty %}
           {% include 'main/components/notfound.html' %}
       {% endfor %}
