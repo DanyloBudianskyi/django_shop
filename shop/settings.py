@@ -40,8 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'accounts',
+
     'tailwind',
     "theme",
+
+    'markdownx',
 ]
 
 TAILWIND_APP_NAME = "theme"
@@ -149,3 +152,33 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'main:product_list'
 LOGOUT_REDIRECT_URL = 'main:product_list'
+
+
+MARKDOWNX_MARKDOWN_EXTENSIONS = [
+            'markdown.extensions.extra',       # Додаткові можливості
+            'markdown.extensions.codehilite',  # Підсвічування коду
+            'markdown.extensions.toc',         # Автоматичний зміст
+            'markdown.extensions.tables',      # Таблиці
+            'markdown.extensions.fenced_code', # Блоки коду з ```
+        ]
+
+# Налаштування markdown
+MARKDOWNX_EDITOR_RESIZABLE = True
+
+# Налаштування завантаження зображень
+MARKDOWNX_UPLOAD_MAX_SIZE = 5 * 1024 * 1024
+MARKDOWNX_UPLOAD_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+MARKDOWNX_IMAGE_MAX_SIZE = {'size': (1920, 1080), 'quality': 90}
+ 
+MARKDOWNX_MEDIA_PATH = 'markdownx/'  # media/markdownx/
+ 
+MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
+    'markdown.extensions.codehilite': {
+        'css_class': 'highlight',
+        'linenums': False, 
+    },
+    'markdown.extensions.toc': {
+        'title': 'Зміст',
+        'toc_depth': 3,
+    },
+}

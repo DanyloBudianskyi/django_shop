@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Product, Category
 from django.utils.html import format_html
+from markdownx.admin import MarkdownxModelAdmin
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -21,13 +22,28 @@ class CategoryAdmin(admin.ModelAdmin):
     image_tag.short_description = "Image"
 
 @admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
+class ProductAdmin(MarkdownxModelAdmin):
     list_display = ( "id" ,"name", "category", "price", "is_available", "featured", "views", "image_tag" )
     list_editable = ( "price", "is_available", "featured")
     list_filter = ("created_at", "category", "is_available", "featured")
     search_fields = ("name", "description")
     ordering = ("-created_at",)
     prepopulated_fields = {"slug": ("name",)}
+
+    fieldsets = (
+        ('Основна інформація', {
+            'fields': ('name', 'slug', 'category', 'image')
+        }),
+        ('Описи', {
+            'fields': ('description',)
+        }),
+        ('Ціни', {
+            'fields': ('price', 'discount_price')
+        }),
+        ('Налаштування', {
+            'fields': ('is_available', 'featured', 'views')
+        }),
+    )
 
     def image_tag(self, obj):
         if obj.image:

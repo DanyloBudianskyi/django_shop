@@ -4,7 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 # Create your models here.
-class Profiles(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     bio = models.TextField(max_length=500, blank=True, verbose_name='Про себе')
     avatar = models.ImageField(upload_to='avatar/', blank=True, null=True, verbose_name='Аватар')

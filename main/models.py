@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from markdownx.models import MarkdownxField
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
@@ -23,8 +24,9 @@ class Category(models.Model):
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name="products", on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
+    description = MarkdownxField(blank = True, help_text="Детальний опис товару в форматі Markdown")
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    discount_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_available = models.BooleanField(default=True)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to="products/%Y/%m/%d")

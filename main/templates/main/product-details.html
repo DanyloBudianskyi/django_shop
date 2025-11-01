@@ -23,7 +23,7 @@
  
   <div class="product-detail-content">
     <p class="text-lg text-black font-bold mt-2">💰Ціна: {{ product.price| currency }}</p>
-    {{ product.description|linebreaks }}
+    {{ product.description| markdown }}
   </div>
  
   <div class="product-detail-footer">
