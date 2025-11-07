@@ -1,0 +1,52 @@
+<div class="border-t border-gray-300 pt-10">
+    <h2 class="text-2xl font-semibold mb-4">Відгуки ({{ reviews_count }})</h2>
+
+    <div class="flex gap-10 items-start">
+
+        <div>
+            <p class="text-4xl font-bold">{{ average_rating|floatformat:1 }}</p>
+
+            <p class="text-yellow-500 text-xl">
+                {% for _ in full_stars %}
+                    ★
+                {% endfor %}
+                {% for _ in empty_stars %}
+                    ☆
+                {% endfor %}
+            </p>
+
+            <p class="text-gray-500 text-sm">
+                на основі {{ reviews_count }} відгуків
+            </p>
+        </div>
+
+        <div class="grow space-y-2">
+            {% for row in rating_rows %}
+                <div class="flex items-center gap-2">
+                    <span class="w-6">{{ row.rate }}★</span>
+                    <div class="w-full h-3 bg-gray-200 rounded">
+                        <div class="h-3 bg-yellow-500 rounded" style="width: {{ row.percent }}%"></div>
+                    </div>
+                    <span class="w-8 text-sm text-gray-600">{{ row.count }}</span>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% if user.is_authenticated and not user_review %}
+        <div class="mt-6">
+            <a href="{% url 'reviews:add_review' product.id %}"
+               class="px-5 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                Залишити відгук
+            </a>
+        </div>
+    {% endif %}
+
+    <div class="mt-8 space-y-8">
+        {% for review in reviews %}
+            {% include "reviews/components/review.html" %}
+        {% empty %}
+            <p class="text-gray-600">Поки немає відгуків :(</p>
+        {% endfor %}
+    </div>
+</div>
