@@ -38,7 +38,7 @@ class ProductAdmin(MarkdownxModelAdmin):
             'fields': ('description',)
         }),
         ('Ціни', {
-            'fields': ('price', 'discount_price')
+            'fields': ('price',)
         }),
         ('Налаштування', {
             'fields': ('is_available', 'featured', 'views')

@@ -27,12 +27,6 @@ def show_popular_products(count=4):
 @register.inclusion_tag('main/components/product.html')
 def show_product_card(product):
     """Відображає картку товару"""
-    discount = 0
-    if product.discount_price and product.price > 0:
-        discount = int(((product.price - product.discount_price) / product.price) * 100)
-
     return {
         'product': product,
-        'discount': discount,
-        'final_price': product.discount_price if product.discount_price else product.price,
     }

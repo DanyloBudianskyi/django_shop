@@ -1,38 +1,26 @@
 {% load shop_filters %}
 
 <div class="relative bg-white shadow-lg rounded-2xl overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-2xl p-5 flex flex-col gap-3">
-  
   {% if product.featured %}
-    <span class="absolute top-3 left-3 badge badge-primary text-white font-semibold shadow-md">
-      ⭐ Рекомендовано
-    </span>
+    <span class="absolute top-3 left-3 badge badge-primary text-white font-semibold shadow-md">⭐ Рекомендовано</span>
   {% endif %}
-  
+
   {% if product.image %}
-    <img 
-      src="{{ product.image.url }}" 
-      alt="{{ product.title }}" 
-      class="w-full h-56 object-cover rounded-xl"
-    >
+    <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-56 object-cover rounded-xl" />
   {% endif %}
 
-  <h2 class="text-xl font-bold text-gray-800 mt-2 line-clamp-2">
-    {{ product.name }}
-  </h2>
+  <h2 class="text-xl font-bold text-gray-800 mt-2 line-clamp-2">{{ product.name }}</h2>
 
-  <p class="text-gray-600 text-sm line-clamp-3">
-    {{ product.description|truncatewords:15 }}
-  </p>
+  <p class="text-gray-600 text-sm line-clamp-3">{{ product.description|truncatewords:15 }}</p>
 
-
-  {% if discount > 0 %}
-    <span class="badge bg-danger">-{{ discount }}%</span>
-    <p><del>{{ product.price|currency }}</del></p>
-    <p class="h5 text-success">{{ final_price|currency }}</p>
-  {% else %}
-    <p class="text-lg font-semibold text-indigo-600">
-        Ціна: {{ product.price|compact_number }} ₴
+  {% if product.has_active_discount %}
+    <p class="text-lg font-bold text-red-600">
+      <span class="inline-block bg-red-600 text-white text-xs font-bold px-2 py-1 rounded">-{{ product.get_discount_percentage }}%</span>
+      {{ product.get_discounted_price|currency }}
     </p>
+    <p class="text-sm line-through text-gray-500">{{ product.price|currency }}</p>
+  {% else %}
+    <p class="text-lg font-semibold text-indigo-600">{{ product.price|currency }}</p>
   {% endif %}
 
   <p class="text-sm font-medium {{ product.is_available|yesno:'text-green-600,text-red-500' }}">
@@ -48,10 +36,5 @@
     <span class="flex items-center gap-1">👁️ {{ product.views }}</span>
   </div>
 
-  <a 
-    href="{{ product.get_absolute_url }}" 
-    class="btn btn-primary mt-4 w-full text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
-  >
-    Детальніше →
-  </a>
+  <a href="{{ product.get_absolute_url }}" class="btn btn-primary mt-4 w-full text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all">Детальніше →</a>
 </div>

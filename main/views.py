@@ -72,6 +72,8 @@ def product_detail(request, id, slug):
 
     rating_range = range(5)
 
+    discount = product.get_active_discount()
+
     return render(request, 'main/product-details.html', {
         'product': product,
         'related_products': related_products,
@@ -83,4 +85,5 @@ def product_detail(request, id, slug):
         'empty_stars': empty_stars,
         'rating_rows': rating_rows,
         'rating_range': rating_range,
+        'discount': discount,
     })

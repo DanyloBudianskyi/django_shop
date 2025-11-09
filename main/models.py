@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db.models import Avg, Count
 from markdownx.models import MarkdownxField
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100, db_index=True)
@@ -27,7 +28,6 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     description = MarkdownxField(blank = True, help_text="Детальний опис товару в форматі Markdown")
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_available = models.BooleanField(default=True)
     slug = models.SlugField(unique=True)
     image = models.ImageField(upload_to="products/%Y/%m/%d")
@@ -63,3 +63,46 @@ class Product(models.Model):
             distribution[item["rating"]] = item["count"]
 
         return distribution
+    
+    def get_active_discount(self):
+        now = timezone.now()
+        discounts = self.discounts.filter(
+            start_date__lte=now,
+            end_date__gte=now
+        )
+
+        if not discounts.exists():
+            return None
+        
+        prices = [
+            (d, d.get_discounted_price(self.price, 1))
+            for d in discounts
+        ]
+        best_discount = min(prices, key=lambda x: x[1])[0]
+        return best_discount
+    
+    def get_discounted_price(self, quantity=1):
+        discount = self.get_active_discount()
+
+        if not discount:
+            return self.price * quantity
+
+        return discount.get_discounted_price(self.price, quantity)
+    
+    def has_active_discount(self):
+        return self.get_active_discount() is not None
+    
+    def get_discount_percentage(self):
+        discount = self.get_active_discount()
+        if not discount:
+            return 0
+
+        original = self.price
+        discounted = discount.get_discounted_price(original, 1)
+
+        try:
+            percentage = (1 - discounted / original) * 100
+        except ZeroDivisionError:
+            return 0
+
+        return round(percentage, 2)

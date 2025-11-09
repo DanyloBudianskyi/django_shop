@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'main',
     'accounts',
     'reviews',
+    'discounts',
 
     'tailwind',
     "theme",
@@ -63,7 +64,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'shop.middleware.AdminAccessRedirectMiddleware'
+    'config.middleware.AdminAccessRedirectMiddleware'
 ]
 
 if DEBUG:
@@ -72,7 +73,7 @@ if DEBUG:
         "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
 
-ROOT_URLCONF = 'shop.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -89,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'shop.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database

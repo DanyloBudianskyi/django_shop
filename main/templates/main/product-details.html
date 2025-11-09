@@ -25,7 +25,13 @@
   {% endif %}
 
   <div class="mb-6">
-    <p class="text-xl font-semibold text-indigo-700 mb-4">💰 Ціна: {{ product.price|currency }}</p>
+    {% if discount %}
+      {% include 'discounts/discount_badge.html' %}
+      <p class="text-xl font-semibold text-red-600 mb-4">💰 Ціна по знижці: {{ product.get_discounted_price|currency }}</p>
+      {% else %}
+      <p class="text-xl font-semibold text-indigo-700 mb-4">💰 Ціна: {{ product.price|currency }}</p>
+    {% endif %}
+    
     <div class="prose prose-indigo max-w-none">
       {{ product.description|markdown }}
     </div>
@@ -39,6 +45,15 @@
       <form style="display:inline;">
         <button class="btn btn-primary btn-sm">Додати в кошик</button>
       </form>
+      {% if user.is_staff %}
+    <div class="mt-4">
+        <a href="{% url 'discounts:add_discount' product.id %}"
+           class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+            Додати знижку
+        </a>
+    </div>
+{% endif %}
+
     </div>
   </div>
 </article>
