@@ -1,36 +1,47 @@
 {% extends 'main/base.html' %}
 
-{% block title %}Профіль - {{ user.username }}{% endblock %} 
+{% block title %}Профіль - {{ user.username }}{% endblock %}
 
 {% block content %}
-<div class="profile-container">
-  <h1>Профіль користувача</h1>
+<div class="max-w-2xl mx-auto p-6">
 
-  <div class="profile-info">
-    <div class="profile-item">
-      <strong>Ім'я користувача:</strong>
-      <span>{{ user.username }}</span>
+  <h1 class="text-3xl font-bold mb-6 text-indigo-700">
+    Профіль користувача
+  </h1>
+
+  <!-- Карточка профиля -->
+  <div class="bg-white rounded-xl shadow p-6 space-y-4 border border-indigo-100">
+
+    <div class="flex justify-between items-center pb-3 border-b">
+      <p class="font-semibold text-lg text-gray-700">
+        {{ user.username }}
+      </p>
+      <span class="badge badge-info">{{ user.email|default:"Email не вказано" }}</span>
     </div>
 
-    <div class="profile-item">
-      <strong>Email:</strong>
-      <span>{{ user.email|default:"Не вказано" }}</span>
-    </div>
+    <div class="space-y-3 text-gray-600">
+      <div class="flex justify-between">
+        <span class="font-medium">Дата реєстрації:</span>
+        <span>{{ user.date_joined|date:"d.m.Y H:i" }}</span>
+      </div>
 
-    <div class="profile-item">
-      <strong>Дата реєстрації:</strong>
-      <span>{{ user.date_joined|date:"d.m.Y H:i" }}</span>
-    </div>
-
-    <div class="profile-item">
-      <strong>Останній вхід:</strong>
-      <span>{{ user.last_login|date:"d.m.Y H:i" }}</span>
+      <div class="flex justify-between">
+        <span class="font-medium">Останній вхід:</span>
+        <span>{{ user.last_login|date:"d.m.Y H:i" }}</span>
+      </div>
     </div>
   </div>
 
-  <div class="profile-actions">
-    <a href="{% url 'main:product_list' %}" class="btn-secondary">← Повернутися до постів</a>
-    <a href="{% url 'accounts:logout' %}" class="btn-danger">Вийти</a>
+  <!-- Действия -->
+  <div class="mt-6 flex gap-3">
+    <a href="{% url 'main:product_list' %}" class="btn btn-outline btn-primary">
+      ← Повернутися до товарів
+    </a>
+
+    <a href="{% url 'accounts:logout' %}" class="btn btn-error">
+      Вийти
+    </a>
   </div>
+
 </div>
 {% endblock %}

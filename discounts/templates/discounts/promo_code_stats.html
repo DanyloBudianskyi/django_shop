@@ -1,0 +1,124 @@
+{% extends "main/base.html" %}
+{% block title %}Статистика промокоду {{ promo.code }}{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto py-8">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-indigo-600">
+      Статистика промокоду: {{ promo.code }}
+    </h1>
+
+    <a href="{% url 'discounts:promo_code_list' %}"
+       class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-lg">
+      ← До списку
+    </a>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Тип</h3>
+      <p class="text-xl font-semibold">
+        {% if promo.discount_type == 'percentage' %}
+          Процентний
+        {% elif promo.discount_type == 'fixed' %}
+          Фіксований
+        {% else %}
+          Доставка
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Значення</h3>
+      <p class="text-xl font-semibold">
+        {% if promo.discount_type == 'percentage' %}
+          {{ promo.value }} %
+        {% elif promo.discount_type == 'fixed' %}
+          {{ promo.value }} ₴
+        {% else %}
+          Безкоштовна доставка
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Статус</h3>
+      {% if promo.is_valid %}
+        <span class="px-3 py-1 bg-green-600 text-white rounded-lg">Активний</span>
+      {% else %}
+        <span class="px-3 py-1 bg-gray-400 text-white rounded-lg">Неактивний</span>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Період дії</h3>
+      <p class="text-lg">
+        {{ promo.start_date|date:"d.m.Y" }}
+        —
+        {{ promo.end_date|date:"d.m.Y" }}
+      </p>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Використано</h3>
+      <p class="text-lg">
+        {{ promo.used_count }}
+        {% if promo.usage_limit %}
+          / {{ promo.usage_limit }}
+        {% else %}
+          / ∞
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="bg-white shadow rounded-lg p-4">
+      <h3 class="text-gray-600 text-sm font-medium">Загальна сума знижок</h3>
+      <p class="text-lg font-semibold">
+        {{ total_discount }} ₴
+      </p>
+    </div>
+
+  </div>
+
+  <div class="bg-white shadow rounded-lg p-6">
+    <h2 class="text-xl font-semibold mb-4">Список використань</h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-left">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2">Користувач</th>
+            <th class="px-4 py-2">Сума замовлення</th>
+            <th class="px-4 py-2">Розмір знижки</th>
+            <th class="px-4 py-2">Дата</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for usage in usage_list %}
+          <tr class="border-t">
+            <td class="px-4 py-2">{{ usage.user.username }}</td>
+            <td class="px-4 py-2">{{ usage.order_amount }} ₴</td>
+            <td class="px-4 py-2">{{ usage.discount_amount }} ₴</td>
+            <td class="px-4 py-2">{{ usage.used_at|date:"d.m.Y H:i" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center py-4 text-gray-500">
+              Немає використань
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

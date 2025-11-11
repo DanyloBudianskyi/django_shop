@@ -5,9 +5,9 @@ from .models import Discount, PromoCode
 
 class DiscountForm(forms.ModelForm):
     min_quantity = forms.IntegerField(
-        required=False,  # не обязательно в форме
+        required=False,
         min_value=1,
-        initial=1,       # значение по умолчанию при рендере
+        initial=1,
         widget=forms.NumberInput(attrs={
             'class': 'w-full px-3 py-2 border rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200',
             'placeholder': 'Мінімальна кількість',
@@ -81,7 +81,6 @@ class DiscountForm(forms.ModelForm):
             raise forms.ValidationError("Дата початку повинна бути раніше за дату кінця")
         
         return cleaned
-    
 
 # Форма створення промо коду 
 
@@ -102,12 +101,12 @@ class PromoCodeForm(forms.ModelForm):
                 'class': 'w-full px-3 py-2 border rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200',
                 'placeholder': "Значення знижки",
             }),
-            'start_date': forms.DateTimeInput(attrs={
-                'type': 'datetime-local',\
+            'start_date': forms.DateInput(attrs={
+                'type': 'date',
                 'class': 'w-full px-3 py-2 border rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200',
             }),
-            'end_date': forms.DateTimeInput(attrs={
-                'type': 'datetime-local',\
+            'end_date': forms.DateInput(attrs={
+                'type': 'date',
                 'class': 'w-full px-3 py-2 border rounded-lg border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200',
             }),
             'usage_limit': forms.NumberInput(attrs={
@@ -182,7 +181,6 @@ class PromoCodeForm(forms.ModelForm):
             raise forms.ValidationError("Дата початку повинна бути раніше за дату кінця")
         
         return cleaned
-    
 
 # Форма активації промо коду
 

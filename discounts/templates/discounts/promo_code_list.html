@@ -1,0 +1,87 @@
+{% extends 'main/base.html' %}
+{% block title %}Список промокодів{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-8">
+
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-indigo-600">Промокоди</h1>
+    <a href="{% url 'discounts:create_promo_code' %}"
+       class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold">
+      Створити промокод
+    </a>
+  </div>
+
+  <form method="get" class="flex gap-4 flex-wrap mb-4 items-center">
+    <input type="text" name="q" placeholder="Пошук по коду"
+           value="{{ request.GET.q|default:'' }}"
+           class="px-3 py-2 border rounded-lg border-gray-300 focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+    
+    <select name="active" class="px-3 py-2 border rounded-lg border-gray-300 focus:ring focus:ring-indigo-200 focus:border-indigo-500">
+      <option value="">Всі промокоди</option>
+      <option value="1" {% if request.GET.active == '1' %}selected{% endif %}>Активні</option>
+      <option value="0" {% if request.GET.active == '0' %}selected{% endif %}>Неактивні</option>
+    </select>
+
+    <button type="submit"
+            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium">
+      Фільтрувати
+    </button>
+  </form>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white shadow rounded-lg overflow-hidden">
+      <thead class="bg-indigo-100 text-left text-gray-600">
+        <tr>
+          <th class="px-4 py-2">Код</th>
+          <th class="px-4 py-2">Тип</th>
+          <th class="px-4 py-2">Значення</th>
+          <th class="px-4 py-2">Дія</th>
+          <th class="px-4 py-2">Використано / Ліміт</th>
+          <th class="px-4 py-2">Статус</th>
+          <th class="px-4 py-2">Дії</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for promo in promo_codes %}
+        <tr>
+          <td class="px-4 py-2 font-medium">{{ promo.code }}</td>
+          <td class="px-4 py-2">{{ promo.get_discount_type_display }}</td>
+          <td class="px-4 py-2">
+            {% if promo.discount_type == 'percentage' %}
+              {{ promo.value }} %
+            {% elif promo.discount_type == 'fixed' %}
+              {{ promo.value }} грн
+            {% else %}
+              Безкоштовна доставка
+            {% endif %}
+          </td>
+          <td class="px-4 py-2">
+            {{ promo.start_date|date:"d.m.Y" }} - {{ promo.end_date|date:"d.m.Y" }}
+          </td>
+          <td class="px-4 py-2">
+            {{ promo.used_count }}{% if promo.usage_limit %} / {{ promo.usage_limit }}{% else %} / ∞{% endif %}
+          </td>
+          <td class="px-4 py-2">
+            {% if promo.is_valid %}
+              <span class="px-2 py-1 bg-green-600 text-white rounded text-sm font-medium">Активний</span>
+            {% else %}
+              <span class="px-2 py-1 bg-gray-400 text-white rounded text-sm font-medium">Неактивний</span>
+            {% endif %}
+          </td>
+          <td class="px-4 py-2 flex gap-2">
+            
+            <a href="{% url 'discounts:promo_code_stats' promo.id %}"
+               class="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded text-sm">Статистика</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="px-4 py-4 text-center text-gray-500">Промокодів не знайдено</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

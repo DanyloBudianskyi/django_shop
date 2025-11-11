@@ -28,6 +28,7 @@
     {% if discount %}
       {% include 'discounts/discount_badge.html' %}
       <p class="text-xl font-semibold text-red-600 mb-4">💰 Ціна по знижці: {{ product.get_discounted_price|currency }}</p>
+      <p class="text-xl font-semibold text-gray-500 mb-4 line-through">Оригінальна ціна: {{ product.price|currency }}</p>
       {% else %}
       <p class="text-xl font-semibold text-indigo-700 mb-4">💰 Ціна: {{ product.price|currency }}</p>
     {% endif %}

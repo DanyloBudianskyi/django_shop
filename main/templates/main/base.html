@@ -6,7 +6,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}{% endblock %}</title>
+    <title>
+      {% block title %}
+
+      {% endblock %}
+    </title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     {% tailwind_css %}
   </head>
@@ -22,26 +26,34 @@
         </div>
 
         <div class="flex gap-2 flex-wrap">
-          {% if user.is_authenticated %}
-            {% if user.is_staff %}
-              <a href="{% url 'admin:index' %}" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded text-sm font-medium border border-indigo-300 transition">
-                Адмін панель
-              </a>
-            {% endif %}
-            <a href="{% url 'accounts:profile' %}" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded text-sm font-medium border border-indigo-300 transition">
-              Профіль
-            </a>
-            <a href="{% url 'accounts:logout' %}" class="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded text-sm font-medium border border-red-300 transition">
-              Вийти
-            </a>
-          {% else %}
-            <a href="{% url 'accounts:login' %}" class="px-3 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-700 rounded text-sm font-medium border border-indigo-300 transition">
-              Вхід
-            </a>
-            <a href="{% url 'accounts:register' %}" class="px-3 py-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded text-sm font-medium border border-yellow-300 transition">
-              Реєстрація
-            </a>
-          {% endif %}
+          <div class="dropdown">
+            <div tabindex="0" role="button" class="btn bg-indigo-700 m-1 border-0 rounded-2xl">Меню</div>
+            <ul tabindex="-1" class="dropdown-content menu bg-white text-black rounded-box z-1 w-52 p-2 shadow-sm">
+              {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                  <li>
+                    <a href="{% url 'admin:index' %}" class="px-3 py-1 hover:bg-indigo-200">Адмін панель</a>
+                  </li>
+                  <li>
+                    <a href="{% url 'discounts:promo_code_list' %}" class="px-3 py-1 hover:bg-indigo-200">Список промокодів</a>
+                  </li>
+                {% endif %}
+                <li>
+                  <a href="{% url 'accounts:profile' %}" class="px-3 py-1 hover:bg-indigo-200">Профіль</a>
+                </li>
+                <li>
+                  <a href="{% url 'accounts:logout' %}" class="px-3 py-1 hover:bg-red-200">Вийти</a>
+                </li>
+              {% else %}
+                <li>
+                  <a href="{% url 'accounts:login' %}" class="px-3 py-1 hover:bg-indigo-200">Вхід</a>
+                </li>
+                <li>
+                  <a href="{% url 'accounts:register' %}" class="px-3 py-1 hover:bg-indigo-200">Реєстрація</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
         </div>
       </div>
 
@@ -49,9 +61,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
           <ul class="flex flex-wrap gap-3 text-sm">
             <li>
-              <a href="{% url 'main:product_list' %}" class="px-3 py-1 bg-white hover:bg-indigo-100 text-indigo-700 rounded font-medium shadow-sm transition border border-indigo-200">
-                Всі продукти
-              </a>
+              <a href="{% url 'main:product_list' %}" class="px-3 py-1 bg-white hover:bg-indigo-100 text-indigo-700 rounded font-medium shadow-sm transition border border-indigo-200">Всі продукти</a>
             </li>
             {% for category in categories %}
               <li>
@@ -67,7 +77,9 @@
     </header>
 
     <main class="flex-1 py-10 px-4 sm:px-8 lg:px-16 bg-gray-50">
-      {% block content %}{% endblock %}
+      {% block content %}
+
+      {% endblock %}
     </main>
   </body>
 </html>

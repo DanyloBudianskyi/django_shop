@@ -95,6 +95,8 @@ def promo_code_list(request):
         promo_codes = promo_codes.filter(code__icontains=query)
     if active == '1':
         promo_codes = promo_codes.filter(is_active=True)
+    elif active == '0':
+        promo_codes = promo_codes.filter(is_active=False)
 
     return render(request, 'discounts/promo_code_list.html', {'promo_codes': promo_codes})
 
