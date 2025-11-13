@@ -1,0 +1,169 @@
+{% extends 'main/base.html' %}
+{% block title %}
+  Кошик
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+  <h1 class="text-3xl font-bold text-indigo-600 text-center mb-8">🛒 Ваш кошик</h1>
+
+  <!-- є товар -->
+  {% if cart|length > 0 %}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- продмети в кошику -->
+      <div class="lg:col-span-2 space-y-4">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b">
+              <th class="py-3 px-2">Товар</th>
+              <th class="py-3 px-2">Кількість</th>
+              <th class="py-3 px-2">Ціна</th>
+              <th class="py-3 px-2">Сума</th>
+              <th class="py-3 px-2"></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for item in cart_items %}
+              {% with product=item.product %}
+                <tr class="border-b hover:bg-gray-50">
+                  <!-- інфо про продукт -->
+                  <td class="py-3 px-2">
+                    <div class="flex items-center gap-3">
+                      {% if product.image %}
+                        <img src="{{ product.image.url }}" class="w-20 h-20 rounded object-cover shadow-sm" />
+                      {% else %}
+                        <div class="w-20 h-20 bg-gray-200 rounded"></div>
+                      {% endif %}
+                      <div>
+                        <a href="{{ product.get_absolute_url }}" class="text-indigo-600 hover:underline font-medium">{{ product.name }}</a>
+                        <p class="text-sm text-gray-500">{{ product.category.name }}</p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="py-3 px-2">
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="flex items-center gap-2">
+                      {% csrf_token %}
+                      {{ item.update_quantity_form.quantity }}
+                      {{ item.update_quantity_form.override_quantity }}
+                      <button class="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm">Оновити</button>
+                    </form>
+                  </td>
+
+                  <td class="py-3 px-2 font-medium">{{ item.price }} грн</td>
+
+                  <td class="py-3 px-2 font-semibold">{{ item.total_price }} грн</td>
+
+                  <td class="py-3 px-2 text-right">
+                    <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                      {% csrf_token %}
+                      <button class="text-red-500 hover:text-red-700 text-xl">🗑</button>
+                    </form>
+                  </td>
+                </tr>
+              {% endwith %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="lg:col-span-1">
+        <div class="sticky top-4 bg-white shadow p-6 rounded-lg border">
+          <h2 class="text-xl font-bold mb-2">Підсумок замовлення</h2>
+
+          <p>
+            Сума товарів: <strong id="cart-total">{{ cart.get_total_price }} ₴</strong>
+          </p>
+
+          {% if cart.discounted_total %}
+            <p class="text-green-600">
+              Зі знижкою: <strong id="cart-discounted-total">{{ cart.discounted_total }} ₴</strong>
+            </p>
+          {% else %}
+            <p class="text-green-600">
+              Зі знижкою: <strong id="cart-discounted-total">0 ₴</strong>
+            </p>
+          {% endif %}
+
+          {% if cart.free_shipping %}
+            <p class="text-green-700" id="cart-shipping">🚚 Безкоштовна доставка</p>
+          {% else %}
+            <p id="cart-shipping">Доставка: {{ cart.shipping_cost }} ₴</p>
+          {% endif %}
+          <h3 class="text-lg font-semibold mb-2">🎟 Застосувати промокод</h3>
+          <form id="promo-form" action="{% url 'discounts:apply_promo_code' %}" method="post" class="flex flex-col gap-2">
+            {% csrf_token %}
+            {{ promo_form.promo_code }}
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-1 rounded mt-2">OK</button>
+          </form>
+          <ul id="promo-errors" class="mt-2 text-red-600 text-sm"></ul>
+          <p id="promo-success" class="mt-2 text-green-600 font-semibold"></p>
+          {% if promo_code %}
+            <p class="mt-2 text-green-600">
+              Активний промокод: <strong>{{ promo_code }}</strong>
+            </p>
+            <a href="{% url 'discounts:remove_promo_code' %}">Видалити</a>
+          {% endif %}
+          <p class="text-lg font-semibold mt-2">
+            Всього до сплати: <span id="cart-total-with-shipping">{{ cart.get_total_price_with_shipping }} ₴</span>
+          </p>
+          <div class="mt-6 space-y-3">
+            <a class="block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center py-2 rounded">Оформити замовлення</a>
+
+            <a href="{% url 'main:product_list' %}" class="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-center py-2 rounded">Продовжити покупки</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center py-16">
+      <div class="text-6xl text-gray-300 mb-4">🛒</div>
+
+      <h2 class="text-2xl font-bold text-gray-700 mb-4">Ваш кошик порожній</h2>
+
+      <a href="{% url 'main:product_list' %}" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded hover:bg-indigo-700">Перейти до покупок</a>
+    </div>
+  {% endif %}
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const form = document.getElementById('promo-form')
+      const errorsContainer = document.getElementById('promo-errors')
+      const successContainer = document.getElementById('promo-success')
+    
+      form.addEventListener('submit', function (e) {
+        e.preventDefault()
+        
+        errorsContainer.innerHTML = ''
+        successContainer.textContent = ''
+    
+        const formData = new FormData(form)
+    
+        fetch(form.action, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          },
+          body: formData
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.success) {
+              window.location.reload();
+            } else {
+              for (const field in data.errors) {
+                data.errors[field].forEach((err) => {
+                  const li = document.createElement('li')
+                  li.textContent = err
+                  errorsContainer.appendChild(li)
+                })
+              }
+            }
+          })
+          .catch((err) => console.error('Ошибка:', err))
+      })
+    })
+  </script>
+{% endblock %}

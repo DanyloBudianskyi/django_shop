@@ -4,10 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.db.models import Q
 from django.utils import timezone
+from decimal import Decimal
 
 from .models import Discount, PromoCode, PromoCodeUsage
 from .forms import DiscountForm, PromoCodeForm, ApplyPromoCodeForm
 from main.models import Product
+from cart.cart import Cart
 
 # Create your views here.
 def product_discounts(request, product_id):
@@ -100,6 +102,7 @@ def promo_code_list(request):
 
     return render(request, 'discounts/promo_code_list.html', {'promo_codes': promo_codes})
 
+@login_required
 def apply_promo_code(request):
     if request.method != 'POST':
         return HttpResponseBadRequest('Invalid method')
@@ -108,32 +111,40 @@ def apply_promo_code(request):
     if form.is_valid():
         promo = form.cleaned_data['promo_code']
 
-        order_amount = request.POST.get("order_amount")
+        cart = Cart(request)
+        order_amount = float(cart.get_total_price())
 
-        try:
-            order_amount = float(order_amount)
-        except:
-            return HttpResponseBadRequest('Invalid amount')
-        
-        discount = promo.apply_discount(order_amount)
+        if promo.discount_type == 'free_shipping':
+            cart.apply_promo(promo)
+            discount_amount = 0
+        else:
+            discount_amount = order_amount - float(promo.apply_discount(order_amount))
+            cart.apply_promo(promo)
+
 
         request.session['promo_code'] = promo.code
 
-        PromoCodeUsage.objects.create(
-            promo_code = promo,
-            user = request.user,
-            order_amount = order_amount,
-            discount_amount = discount
-        )
+        if request.user.is_authenticated:
+            PromoCodeUsage.objects.create(
+                promo_code=promo,
+                user=request.user,
+                order_amount=order_amount,
+                discount_amount=discount_amount
+            )
 
         promo.increment_usage()
         promo.save()
 
+
+        
         return JsonResponse({
             'success': True,
-            'discount': float(discount),
-            "final_price": float(order_amount - discount),
+            'discounted_total': cart.discounted_total,
+            'free_shipping': cart.free_shipping,
+            'total_with_shipping': cart.get_total_price_with_shipping(),
+            'promo_code': promo.code
         })
+
     return JsonResponse({
         "success": False,
         "errors": form.errors,
@@ -141,7 +152,15 @@ def apply_promo_code(request):
 
 def remove_promo_code(request):
     if 'promo_code' in request.session:
+        cart = Cart(request)
         del request.session['promo_code']
+
+        if cart.free_shipping:
+            cart.free_shipping = False
+            cart.discounted_total = None
+        cart.discounted_total = None    
+        cart.save()
+
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 @staff_member_required

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'accounts',
     'reviews',
     'discounts',
+    'cart',
 
     'tailwind',
     "theme",
@@ -85,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart',
             ],
         },
     },
@@ -184,3 +186,6 @@ MARKDOWNX_MARKDOWN_EXTENSION_CONFIGS = {
         'toc_depth': 3,
     },
 }
+
+SESSION_COOKIE_AGE = 86400  # 24 години
+CART_SESSION_ID = 'cart'

@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from main.models import Product
 
-
 class Discount(models.Model):
     DISCOUNT_TYPES = (
         ('percentage', 'Відсоток'),
@@ -115,12 +114,12 @@ class PromoCode(models.Model):
             return order_amount
 
         if self.discount_type == 'percentage':
-            discount = order_amount * (self.value / 100)
-            return max(order_amount - discount, 0)
+            discount = float(order_amount) * float((self.value / 100))
+            return max(float(order_amount) - float(discount), 0)
 
         elif self.discount_type == 'fixed':
             discount = min(self.value, order_amount)
-            return max(order_amount - discount, 0)
+            return max(float(order_amount) - float(discount), 0)
 
         elif self.discount_type == 'free_shipping':
             return order_amount

@@ -3,6 +3,7 @@ from .models import Product, Category
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from reviews.models import Review
+from cart.forms import CartAddProductForm
 
 def product_list(request, category_slug=None):
     categories = Category.objects.all()
@@ -74,6 +75,7 @@ def product_detail(request, id, slug):
 
     discount = product.get_active_discount()
 
+    cart_product_form = CartAddProductForm()
     return render(request, 'main/product-details.html', {
         'product': product,
         'related_products': related_products,
@@ -86,4 +88,5 @@ def product_detail(request, id, slug):
         'rating_rows': rating_rows,
         'rating_range': rating_range,
         'discount': discount,
+        'cart_product_form': cart_product_form
     })

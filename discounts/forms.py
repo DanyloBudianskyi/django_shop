@@ -184,7 +184,7 @@ class PromoCodeForm(forms.ModelForm):
 
 # Форма активації промо коду
 
-class ApplyPromoCodeForm(forms.ModelForm):
+class ApplyPromoCodeForm(forms.Form):
     promo_code = forms.CharField(
         max_length=50,
         widget=forms.TextInput(attrs={

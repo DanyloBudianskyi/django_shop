@@ -43,9 +43,19 @@
     
     <div class="flex gap-3 flex-wrap">
       <a href="{% url 'main:product_list' %}" class="btn btn-outline btn-sm">← Повернутися до списку</a>
-      <form style="display:inline;">
-        <button class="btn btn-primary btn-sm">Додати в кошик</button>
-      </form>
+<div class="mt-6">
+    <form action="{% url 'cart:cart_add' product.id %}" method="post">
+        {% csrf_token %}
+        <div class="flex items-center gap-4">
+            {{ cart_product_form.quantity }}
+            {{ cart_product_form.override }}
+            <button type="submit" 
+                    class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+                🛒 Додати в кошик
+            </button>
+        </div>
+    </form>
+</div>
       {% if user.is_staff %}
     <div class="mt-4">
         <a href="{% url 'discounts:add_discount' product.id %}"
